@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 50vh; margin: 0; padding-top: 10%; }
+canvas { width: 50%; max-width: 400px; height: auto; }
+h2 { margin: 5px 0; }
+</style>
+</head>
+<body>
+<canvas id="myPieChart"></canvas>
+<h2>Total Time: 8511719.674551 ns</h2>
+<h2>model: test- </h2>
+<script>
+var ctx = document.getElementById('myPieChart').getContext('2d');
+var myPieChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: ['DP comm', 'Expose TP comm', 'Total compute', 'PP Bubble time'],
+        datasets: [{
+            data: [373394, 480332, 7.21323e+06, 444762],
+            backgroundColor: ['red', 'green', 'blue', 'magenta'],
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        var label = context.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (context.parsed !== null) {
+                            label += context.parsed + ' ns';
+                        }
+                        return label;
+                    }
+                }
+            }
+        }
+    }
+});
+</script>
+</body>
+</html>

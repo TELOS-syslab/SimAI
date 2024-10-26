@@ -1,0 +1,13 @@
+exec_prefix="/usr/local/bin"
+libdir="/usr/local/lib"
+includedir="/usr/local/include"
+
+Name: ns3-aodv
+Description: 
+URL: 
+Version: 3.36.1
+Requires:  ns3-internet ns3-wifi
+Requires.private: 
+Cflags: -I"${includedir}" -I/usr/include -I/usr; -I/usr/include/libxml2 -I/usr/include/python3.10 -I/root/anaconda3/include
+Libs: -L"${libdir}" -lns3.36.1-aodv-debug  -lns3.36.1-internet-debug -lns3.36.1-wifi-debug
+Libs.private: -L"${libdir}" 

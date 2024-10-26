@@ -1,0 +1,48 @@
+---- Summary of optional ns-3 features:
+Build profile                 : debug
+Build directory               : /mnt/fth/software2/SimAI/astra-sim-alibabacloud/extern/network_backend/ns3-interface/simulation/build
+BRITE Integration             : [31mOFF (missing dependency)[0m
+DES Metrics event collection  : OFF (not requested)
+DPDK NetDevice                : OFF (not requested)
+Emulation FdNetDevice         : [32mON[0m
+Examples                      : OFF (not requested)
+File descriptor NetDevice     : [32mON[0m
+GNU Scientific Library (GSL)  : [31mOFF (missing dependency)[0m
+GtkConfigStore                : [31mOFF (missing dependency)[0m
+LibXml2 support               : [32mON[0m
+MPI Support                   : OFF (not requested)
+Multithreaded Simulation      : [32mON[0m
+ns-3 Click Integration        : [31mOFF (missing dependency)[0m
+ns-3 OpenFlow Integration     : [31mOFF (missing dependency)[0m
+Netmap emulation FdNetDevice  : [31mOFF (missing dependency)[0m
+PyViz visualizer              : [31mOFF (missing dependency)[0m
+Python API Scanning Support   : OFF (not requested)
+Python Bindings               : OFF (not requested)
+Real Time Simulator           : [32mON[0m
+SQLite support                : [32mON[0m
+Tap Bridge                    : [32mON[0m
+Tap FdNetDevice               : [32mON[0m
+Tests                         : OFF (not requested)
+
+
+Modules configured to be built:
+antenna                   aodv                      applications              
+bridge                    buildings                 config-store              
+core                      csma                      csma-layout               
+dsdv                      dsr                       energy                    
+fd-net-device             flow-monitor              internet                  
+internet-apps             lr-wpan                   lte                       
+mesh                      mobility                  mtp                       
+netanim                   network                   nix-vector-routing        
+olsr                      point-to-point            point-to-point-layout     
+propagation               sixlowpan                 spectrum                  
+stats                     tap-bridge                topology-read             
+traffic-control           uan                       virtual-net-device        
+wave                      wifi                      wimax                     
+
+
+Modules that cannot be built:
+brite                     click                     mpi                       
+openflow                  test                      visualizer                
+
+
