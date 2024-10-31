@@ -1,4 +1,0 @@
-layer_name,test1,fwd compute,wg compute,ig compute,fwd exposed comm,wg exposed comm,ig exposed comm,fwd total comm,algbw,busbw,wg total comm,algbw,busbw,ig total comm,algbw,busbw,workload finished at
-embedding_layer,test1,556.000000,0.001000,0.001000,3175.523000,0.000000,0.000000,3175.523000,169.065353,295.864380,0.000000,-nan,0.000000,0.000000,-nan,0.000000,3731.528000
-SUM,test1,556.000000,0.001000,0.001000,3175.523000,0.000000,0.000000,3175.523000,NONE,NONE,0.000000,NONE,NONE,0.000000,NONE,NONE
-total exposed comm,3175.526000,total comp,556.002000,total time,3731.528000

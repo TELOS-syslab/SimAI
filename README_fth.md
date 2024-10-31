@@ -9,6 +9,15 @@ git config --global user.email "tianhao909"
   remotes/origin/master
   remotes/upstream/master
 
+git remote add upstream https://github.com/aliyun/SimAI
+git fetch upstream
+git checkout remotes/upstream/master
+git merge upstream/master
+
+git push origin master
+
+bash  && conda activate fth01
+
 
 <pre>
         |--- <a href="https://github.com/aliyun/aicb">AICB</a>
