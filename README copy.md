@@ -1,14 +1,4 @@
-# SimAI Components   组件结构
-
-git config --global user.email "843101550@qq.com"
-
-git config --global user.email "tianhao909"
-
-* master
-  remotes/origin/HEAD -> origin/master
-  remotes/origin/master
-  remotes/upstream/master
-
+# SimAI Components
 
 <pre>
         |--- <a href="https://github.com/aliyun/aicb">AICB</a>
@@ -16,12 +6,6 @@ SimAI --|--- <a href="https://github.com/aliyun/SimCCL">SimCCL</a>
         |--- <a href="https://github.com/aliyun/SimAI/tree/master/astra-sim-alibabacloud">astra-sim-alibabacloud</a>
         |--- <a href="https://github.com/aliyun/ns-3-alibabacloud">ns-3-alibabacloud</a>
 </pre>
-
-这部分展示了 SimAI 的主要组件，每个组件都链接到其 GitHub 仓库，方便访问代码和文档。以下是组件介绍：
-AICB: 阿里云的 AI 通信测试工具。
-SimCCL: 针对 AI 集体通信的模拟器。
-astra-sim-alibabacloud: 一个用于详细 AI 负载模拟的扩展仿真环境。
-ns-3-alibabacloud: 自定义版本的 ns-3 网络模拟器。
 
 # Table of Contents
 - [SimAI Overview](#simai-overview)
@@ -37,7 +21,6 @@ ns-3-alibabacloud: 自定义版本的 ns-3 网络模拟器。
 ## Introduction
 
 **SimAI** is the industry's first full-stack, high-precision **Sim**ulator for **AI** large-scale training. It provides detailed modeling and simulation of the entire LLM training process, encompassing framework, collective communication, network layers, and more. This comprehensive approach offers end-to-end performance data, enabling researchers to:
-SimAI 是业内首个全栈高精度的AI大规模训练仿真器。它能对整个大型语言模型（LLM）训练过程进行详细建模和仿真，涵盖框架、集体通信、网络层等。此综合方法提供端到端性能数据，使研究人员可以：
 
 - Analyze training process details
 - Evaluate the time consumption of AI tasks under specific conditions
@@ -50,20 +33,8 @@ SimAI 是业内首个全栈高精度的AI大规模训练仿真器。它能对整
   - Adaptive routing algorithms
   - Scale-up/out network topology modifications
   - ...
-分析训练过程细节
-评估特定条件下 AI 任务的时间消耗
-评估各种算法优化的端到端性能提升，包括：
-框架参数设置
-集体通信算法
-NCCL 环境变量
-网络传输协议
-拥塞控制算法
-自适应路由算法
-网络拓扑结构的横向/纵向扩展
-...
 
 Building on pure simulation capabilities, SimAI has evolved into a versatile full-stack toolkit comprising four components ([aicb](https://github.com/aliyun/aicb), [SimCCL](https://github.com/aliyun/SimCCL), [astra-sim-alibabacloud](https://github.com/aliyun/SimAI/tree/master/astra-sim-alibabacloud), [ns-3-alibabacloud](https://github.com/aliyun/ns-3-alibabacloud)). These components can be combined in various ways to achieve different functionalities. Below, we present the six main usage scenarios for SimAI. We encourage users to explore even more possibilities with this powerful tool.
-SimAI 已从单纯的仿真能力发展为一个多功能的全栈工具包，由四个组件（aicb、SimCCL、astra-sim-alibabacloud和ns-3-alibabacloud）组成。这些组件可以按多种方式组合，以实现不同功能。以下列出了 SimAI 的六大主要使用场景，并鼓励用户探索更多可能性。
 
 | Scenario | Description | Component Combination |
 |----------|-------------|------------------------|
@@ -74,19 +45,10 @@ SimAI 已从单纯的仿真能力发展为一个多功能的全栈工具包，�
 | 5. SimAI-Analytical | Conduct rapid AICB workload analysis and simulation on any server (ignoring underlying network details) | [AICB](https://github.com/aliyun/aicb) + [astra-sim-alibabacloud](https://github.com/aliyun/SimAI/tree/master/astra-sim-alibabacloud)(analytical) |
 | 6. SimAI-Simulation | Perform full simulation on any server | [AICB](https://github.com/aliyun/aicb) + [SimCCL](https://github.com/aliyun/SimCCL) + [astra-sim-alibabacloud](https://github.com/aliyun/SimAI/tree/master/astra-sim-alibabacloud)(simulation) + [ns-3-alibabacloud](https://github.com/aliyun/ns-3-alibabacloud) |
 
-场景	描述	组件组合
-1. AICB 测试套件	使用 AICB 测试套件在 GPU 集群上运行通信模式	AICB
-2. AICB/AIOB 工作负载	建模训练过程中的计算/通信模式以生成工作负载	AICB
-3. 集体通信分析	将集体通信操作分解为点对点通信集	SimCCL
-4. 无 GPU 的集体通信	在非 GPU 集群上执行 RDMA 集体通信流量	AICB + SimCCL + astra-sim-alibabacloud(物理层)
-5. SimAI-Analytical	在任意服务器上快速进行 AICB 工作负载分析和仿真（忽略底层网络细节）	AICB + astra-sim-alibabacloud(分析层)
-6. SimAI-Simulation	在任意服务器上进行全仿真	AICB + SimCCL + astra-sim-alibabacloud(仿真层) + ns-3-alibabacloud
-
-Below is the architecture diagram of the SimAI Simulator:  SimAI 仿真器的架构图如下：
+Below is the architecture diagram of the SimAI Simulator:
 ![SimAI_Arc](./docs/images/SimAI_Arc.png)
 
 astra-sim-alibabacloud is extended from [astra-sim](https://github.com/astra-sim/astra-sim/tree/ASTRA-sim-1.0), we have integrated NCCL algorithms and added some new features.
-astra-sim-alibabacloud 是基于 astra-sim 的扩展版，我们已集成 NCCL 算法并添加了一些新功能。
 
 ## Citation
 
