@@ -48,50 +48,56 @@ ns-3-alibabacloud: 自定义版本的 ns-3 网络模拟器。
 **SimAI** is the industry's first full-stack, high-precision **Sim**ulator for **AI** large-scale training. It provides detailed modeling and simulation of the entire LLM training process, encompassing framework, collective communication, network layers, and more. This comprehensive approach offers end-to-end performance data, enabling researchers to:
 SimAI 是业内首个全栈高精度的AI大规模训练仿真器。它能对整个大型语言模型（LLM）训练过程进行详细建模和仿真，涵盖框架、集体通信、网络层等。此综合方法提供端到端性能数据，使研究人员可以：
 
-- Analyze training process details
-- Evaluate the time consumption of AI tasks under specific conditions
-- Evaluate E2E performance gains from various algorithmic optimizations including:
-  - Framework parameters settings
-  - Collective communication algorithms
-  - NCCL environment variables
-  - Network transmission protocols
-  - Congestion control algorithms
-  - Adaptive routing algorithms
-  - Scale-up/out network topology modifications
-  - ...
+- Analyze training process details 
 分析训练过程细节
+
+- Evaluate the time consumption of AI tasks under specific conditions
 评估特定条件下 AI 任务的时间消耗
+
+- Evaluate E2E performance gains from various algorithmic optimizations including:
 评估各种算法优化的端到端性能提升，包括：
-框架参数设置
-集体通信算法
-NCCL 环境变量
-网络传输协议
-拥塞控制算法
-自适应路由算法
-网络拓扑结构的横向/纵向扩展
-...
+
+  - Framework parameters settings 框架参数设置
+  - Collective communication algorithms 集体通信算法
+  - NCCL environment variables NCCL 环境变量
+  - Network transmission protocols 网络传输协议
+  - Congestion control algorithms 拥塞控制算法
+  - Adaptive routing algorithms 自适应路由算法
+  - Scale-up/out network topology modifications 网络拓扑结构的横向/纵向扩展
+  - ...
+
+
+
 
 Building on pure simulation capabilities, SimAI has evolved into a versatile full-stack toolkit comprising four components ([aicb](https://github.com/aliyun/aicb), [SimCCL](https://github.com/aliyun/SimCCL), [astra-sim-alibabacloud](https://github.com/aliyun/SimAI/tree/master/astra-sim-alibabacloud), [ns-3-alibabacloud](https://github.com/aliyun/ns-3-alibabacloud)). These components can be combined in various ways to achieve different functionalities. Below, we present the six main usage scenarios for SimAI. We encourage users to explore even more possibilities with this powerful tool.
 SimAI 已从单纯的仿真能力发展为一个多功能的全栈工具包，由四个组件（aicb、SimCCL、astra-sim-alibabacloud和ns-3-alibabacloud）组成。这些组件可以按多种方式组合，以实现不同功能。以下列出了 SimAI 的六大主要使用场景，并鼓励用户探索更多可能性。
 
 | Scenario | Description | Component Combination |
+场景	描述	组件组合
 |----------|-------------|------------------------|
 | 1. AICB Test Suite | Run communication patterns on GPU clusters using AICB Test suite | [AICB](https://github.com/aliyun/aicb) |
-| 2. AICB/AIOB Workload | Model compute/communication patterns of training process to generate workload | [AICB](https://github.com/aliyun/aicb) |
-| 3. Collective Comm Analyze | Break down collective communication operations into point-to-point communication sets | [SimCCL](https://github.com/aliyun/SimCCL) |
-| 4. Collective Comm w/o GPU | Perform RDMA collective communication traffic on non-GPU clusters | [AICB](https://github.com/aliyun/aicb) + [SimCCL](https://github.com/aliyun/SimCCL) + [astra-sim-alibabacloud](https://github.com/aliyun/SimAI/tree/master/astra-sim-alibabacloud)(physical) |
-| 5. SimAI-Analytical | Conduct rapid AICB workload analysis and simulation on any server (ignoring underlying network details) | [AICB](https://github.com/aliyun/aicb) + [astra-sim-alibabacloud](https://github.com/aliyun/SimAI/tree/master/astra-sim-alibabacloud)(analytical) |
-| 6. SimAI-Simulation | Perform full simulation on any server | [AICB](https://github.com/aliyun/aicb) + [SimCCL](https://github.com/aliyun/SimCCL) + [astra-sim-alibabacloud](https://github.com/aliyun/SimAI/tree/master/astra-sim-alibabacloud)(simulation) + [ns-3-alibabacloud](https://github.com/aliyun/ns-3-alibabacloud) |
-
-场景	描述	组件组合
 1. AICB 测试套件	使用 AICB 测试套件在 GPU 集群上运行通信模式	AICB
+
+| 2. AICB/AIOB Workload | Model compute/communication patterns of training process to generate workload | [AICB](https://github.com/aliyun/aicb) |
 2. AICB/AIOB 工作负载	建模训练过程中的计算/通信模式以生成工作负载	AICB
+
+| 3. Collective Comm Analyze | Break down collective communication operations into point-to-point communication sets | [SimCCL](https://github.com/aliyun/SimCCL) |
 3. 集体通信分析	将集体通信操作分解为点对点通信集	SimCCL
+
+| 4. Collective Comm w/o GPU | Perform RDMA collective communication traffic on non-GPU clusters | [AICB](https://github.com/aliyun/aicb) + [SimCCL](https://github.com/aliyun/SimCCL) + [astra-sim-alibabacloud](https://github.com/aliyun/SimAI/tree/master/astra-sim-alibabacloud)(physical) |
 4. 无 GPU 的集体通信	在非 GPU 集群上执行 RDMA 集体通信流量	AICB + SimCCL + astra-sim-alibabacloud(物理层)
+
+| 5. SimAI-Analytical | Conduct rapid AICB workload analysis and simulation on any server (ignoring underlying network details) | [AICB](https://github.com/aliyun/aicb) + [astra-sim-alibabacloud](https://github.com/aliyun/SimAI/tree/master/astra-sim-alibabacloud)(analytical) |
 5. SimAI-Analytical	在任意服务器上快速进行 AICB 工作负载分析和仿真（忽略底层网络细节）	AICB + astra-sim-alibabacloud(分析层)
+
+| 6. SimAI-Simulation | Perform full simulation on any server | [AICB](https://github.com/aliyun/aicb) + [SimCCL](https://github.com/aliyun/SimCCL) + [astra-sim-alibabacloud](https://github.com/aliyun/SimAI/tree/master/astra-sim-alibabacloud)(simulation) + [ns-3-alibabacloud](https://github.com/aliyun/ns-3-alibabacloud) |
 6. SimAI-Simulation	在任意服务器上进行全仿真	AICB + SimCCL + astra-sim-alibabacloud(仿真层) + ns-3-alibabacloud
 
-Below is the architecture diagram of the SimAI Simulator:  SimAI 仿真器的架构图如下：
+
+
+
+Below is the architecture diagram of the SimAI Simulator:  
+SimAI 仿真器的架构图如下：
 ![SimAI_Arc](./docs/images/SimAI_Arc.png)
 
 astra-sim-alibabacloud is extended from [astra-sim](https://github.com/astra-sim/astra-sim/tree/ASTRA-sim-1.0), we have integrated NCCL algorithms and added some new features.
@@ -100,46 +106,59 @@ astra-sim-alibabacloud 是基于 astra-sim 的扩展版，我们已集成 NCCL �
 ## Citation
 
 SimAI work has been accepted by NSDI'25 Spring, and it'll be showcased soon.
+SimAI的研究成果已被NSDI'25春季会议接收，并即将展示。
 
 Paper name is "SimAI: Unifying Architecture Design and Performance Tunning for Large-Scale Large Language Model Training with Scalability and Precision"  [pdf]() / [slides]() / [video]()
+论文标题为“SimAI：统一架构设计与性能调优，实现大规模大语言模型训练的可扩展性和精度”。pdf / slides / video
 
 # Usage
 
 Here are some simple examples, SimAI full tutorials can be found here: [**SimAI@Tutorial**](docs/Tutorial.md), [**aicb@Tutorial**](https://github.com/aliyun/aicb/blob/master/training/tutorial.md), [SimCCL@Tutorial], [ns-3-alibabacloud@Tutorial]
+以下是一些简单的示例，SimAI完整的教程可在以下链接中找到：SimAI@Tutorial，aicb@Tutorial，[SimCCL@Tutorial]，[ns-3-alibabacloud@Tutorial]
 
-## Setup
+## Setup 安装
 
 You can follow the instrucitons below to quickly set up the environtments and run SimAI
+按照以下说明可以快速设置环境并运行SimAI。
 
-### From Source Code
+### From Source Code 从源代码安装
 
 The following code has been successfully tested on GCC/G++ 9.4.0, python 3.8.10 in Ubuntu 20.04
+以下代码已在GCC/G++ 9.4.0、Python 3.8.10环境下通过测试，系统版本为Ubuntu 20.04。
 
 ```bash
-# Clone the repository
+# Clone the repository 克隆代码库
 $ git clone https://github.com/aliyun/SimAI.git
 $ cd ./SimAI/
 
-# Clone submodules
+# Clone submodules 克隆子模块
 $ git submodule update --init --recursive
-# Make sure use the newest commit
+# Make sure use the newest commit 确保使用最新的提交版本
 $ git submodule update --remote
 
-# Compile SimAI-Analytical
+# Compile SimAI-Analytical 编译SimAI-Analytical
 $ ./scripts/build.sh -c analytical
 
-# Compile SimAI-Simulation (ns3)
+# Compile SimAI-Simulation (ns3) 编译SimAI-Simulation (ns3)
 $ ./scripts/build.sh -c ns3
 
 ```
 
-## Use SimAI-Analytical
+## Use SimAI-Analytical 使用SimAI-Analytical
 
 ```bash
 $  ./bin/SimAI_analytical -w example/workload_analytical.txt -g 1024 -g_p_s 8 -r results/test- -busbw example/busbw.yaml
 ```
+这里是如何使用SimAI的分析模块的示例。命令行中各参数的含义如下：
+-w example/workload_analytical.txt：指定工作负载文件；
+-g 1024：表示使用1024个GPU；
+-g_p_s 8：每个服务器使用8个GPU；
+-r results/test-：输出结果文件前缀；
+-busbw example/busbw.yaml：指定带宽文件。
+这个命令用于在给定工作负载和配置下执行分析模拟，并输出结果。
 
-## Use SimAI-Simulation
+
+## Use SimAI-Simulation  使用SimAI-Simulation
 
 ```bash
 # Create network topo
@@ -149,4 +168,17 @@ $ python3 ./astra-sim-alibabacloud/inputs/topo/gen_HPN_7.0_topo_mulgpus_one_link
 $ AS_SEND_LAT=3 AS_NVLS_ENABLE=1 ./bin/SimAI_simulator -t 16 -w ./example/microAllReduce.txt -n ./HPN_7_0_128_gpus_8_in_one_server_with_400Gbps_A100
 
 ```
+此部分是SimAI仿真模块的使用示例：
+创建网络拓扑：使用Python脚本生成一个网络拓扑配置。
+-g 128：表示使用128个GPU；
+-gt A100：指定GPU型号为A100；
+-bw 400Gbps：单个链路带宽400Gbps；
+-nvbw 2400Gbps：NVLink总带宽2400Gbps。
 
+运行仿真：
+AS_SEND_LAT=3：设置网络发送延迟为3微秒；
+AS_NVLS_ENABLE=1：启用NVLink仿真；
+./bin/SimAI_simulator -t 16：启动16线程运行仿真；
+-w ./example/microAllReduce.txt：使用AllReduce示例工作负载文件；
+-n ./HPN_7_0_128_gpus_8_in_one_server_with_400Gbps_A100：使用生成的拓扑文件。
+此命令用于在指定网络拓扑、带宽、延迟等配置下运行仿真，并模拟分布式计算过程。
