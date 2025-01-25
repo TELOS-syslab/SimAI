@@ -8,6 +8,6 @@ URL:
 Version: 3.36.1
 Requires:  ns3-internet ns3-stats
 Requires.private: 
-Cflags: -I"${includedir}" -I/usr/include -I/usr; -I/usr/include/libxml2 -I/usr/include/python3.10 -I/root/anaconda3/include -I/mnt/fth/software2/SimAI/astra-sim-alibabacloud/extern/network_backend/ns3-interface/simulation/src/applications
+Cflags: -I"${includedir}" -I/usr/include -I/usr; -I/usr/include/libxml2 -I/root/anaconda3/include/python3.12 -I/root/anaconda3/include -I/mnt/fth/software2/SimAI/astra-sim-alibabacloud/extern/network_backend/ns3-interface/simulation/src/applications
 Libs: -L"${libdir}" -lns3.36.1-applications-debug  -lns3.36.1-internet-debug -lns3.36.1-stats-debug
 Libs.private: -L"${libdir}" 

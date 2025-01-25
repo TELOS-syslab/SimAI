@@ -66,7 +66,7 @@ Workload::Workload(
     std::cout << "stat path: " << path << " ,total rows: " << total_rows
               << " ,stat row: " << stat_row << std::endl;
     detailed = new CSVWriter(path, "detailed_"+std::to_string(generator->total_nodes)+".csv");
-    end_to_end = new CSVWriter(path, "EndToEnd_"+std::to_string(generator->total_nodes)+".csv");
+    end_to_end = new CSVWriter(path, "EndToEnd.csv");
     dimension_utilization =
         new CSVWriter(path, run_name + "_dimension_utilization_"+std::to_string(generator->npu_offset)+".csv");
     if (stat_row == 0) {
@@ -76,7 +76,12 @@ Workload::Workload(
   #endif
 }
 void Workload::initialize_stat_files() {
+  #ifdef NS3_MPI
   detailed->initialize_csv(SIZE * total_rows + 20, 50);
+  #endif
+  #ifdef NS3_MTP 
+  detailed->initialize_csv(SIZE * total_rows + 20, 50);
+  #endif
   end_to_end->initialize_csv(SIZE * total_rows + 20, 50);
 }
 void Workload::call(EventType event, CallData* data) {
@@ -118,7 +123,9 @@ void Workload::report() {
   #ifdef ANALYTI
   double pre_bubble_time = 0;
   double DP_comm = 0;
+  double DP_EP_comm = 0;
   double Expose_TP_comm = 0;
+  double Expose_EP_comm = 0;
   #endif
   std::vector<double> total_fwd_time = {0, 0, 0};
   std::vector<double> total_wg_time = {0, 0, 0};
@@ -141,7 +148,9 @@ void Workload::report() {
         total_exposed,
         pre_bubble_time,
         DP_comm,
+        DP_EP_comm,
         Expose_TP_comm,
+        Expose_EP_comm,
         this->seprate_log));
     #else
     astraSimDataAPI.layers_stats.push_back(layers[i]->report(
@@ -171,7 +180,7 @@ void Workload::report() {
   std::cout << "all passes finished at time: " << Sys::boostedTick()
             << ", id of first layer: " << layers[0]->id << std::endl;
   generator->NI->pass_front_end_report(astraSimDataAPI);
-
+  #ifdef NS3_MTP 
   if (this->seprate_log) {
     std::list<std::list<std::pair<uint64_t, double>>> dims;
     for (int i = 0; i < generator->scheduler_unit->usage.size(); i++) {
@@ -180,6 +189,17 @@ void Workload::report() {
     }
     dimension_utilization->finalize_csv(dims);
   }
+  #endif
+  #ifdef NS3_MPI 
+  if (this->seprate_log) {
+    std::list<std::list<std::pair<uint64_t, double>>> dims;
+    for (int i = 0; i < generator->scheduler_unit->usage.size(); i++) {
+      dims.push_back(
+          generator->scheduler_unit->usage[i].report_percentage(10000));
+    }
+    dimension_utilization->finalize_csv(dims);
+  }
+  #endif
 }
 void Workload::check_for_sim_end() {
   if (pass_counter == TOTAL_PASS) {
@@ -1121,83 +1141,133 @@ bool Workload::initialize_workload(std::string name) {
       std::cout << "Success in opening workload file" << std::endl;
     }
   }
-  std::string type;
-  int lines;
-  inFile >> type;
-  parallelismPolicy = decode_parallelsim(type);
+ std::string firstline;
+  std::getline(inFile,firstline);
+  // std::cout << "First line is : '" << firstline << "'" << std::endl;
+  std::istringstream iss(firstline);
+  std:string token;
+  std::vector<std::string> tokens;
+  // bool findparallesimPolcy = false;
+  
+  while (iss >> token) {
+        tokens.push_back(token);
+        // std::cout << "Token is : '" << token << "'" << std::endl;
+    }
+
+
+
+  if(!tokens.empty()){
+    parallelismPolicy = decode_parallelsim(tokens[0]);
+  }
+
   if (parallelismPolicy == ParallelismPolicy::TransformerFwdInBckwd ||
       parallelismPolicy == ParallelismPolicy::Transformer) {
-    std::string tmp;
-    int i;
-    inFile >> tmp;
-    inFile >> model_parallel_npu_group;
-    if (generator->id == 0) {
-      std::cout << tmp << " is: " << model_parallel_npu_group << std::endl;
-    }
-    inFile >> tmp;
-    inFile >> expert_parallel_npu_group;
-    inFile >> tmp;
-    inFile >> pipeline_model_parallelism;
-    inFile >> tmp;
-    inFile >> GA;
-    inFile >> tmp;
-    inFile >> all_gpus;
-    if (parallelismPolicy == ParallelismPolicy::TransformerFwdInBckwd) {
-      inFile >> tmp;
-      inFile >> i;
-      if (generator->id == 0) {
-        std::cout << "checkpoints layers are: ";
-      }
-      while (i-- > 0) {
-        int layer;
-        inFile >> layer;
-        chekpoints[layer] = true;
-        if (generator->id == 0) {
-          std::cout << layer << ", ";
+        for (size_t i = 1; i < tokens.size(); i = i+1){
+          if(tokens[i]=="model_parallel_NPU_group:"){
+            model_parallel_npu_group = std::stoi(tokens[i+1]);
+            if (generator->id == 0) {
+              std::cout <<"model_parallel_NPU_group is " << model_parallel_npu_group << std::endl;
+            }
+          }else if(tokens[i]=="ep:"){
+            expert_parallel_npu_group = std::stoi(tokens[i+1]);
+          }else if(tokens[i]== "pp:"){
+            pipeline_model_parallelism = std::stoi(tokens[i+1]);
+          }else if(tokens[i]=="vpp:"){
+            vpp = std::stoi(tokens[i+1]);
+          }else if(tokens[i]=="ga:"){
+            GA = std::stoi(tokens[i+1]);
+          }else if(tokens[i]=="all_gpus:"){
+            all_gpus = std::stoi(tokens[i+1]);
+          }
         }
-      }
-      if (generator->id == 0) {
-        std::cout << std::endl;
-        std::cout << "layers initiating fwd_in_bckwd are: ";
-      }
-      inFile >> tmp;
-      inFile >> i;
-      while (i-- > 0) {
-        int layer;
-        inFile >> layer;
-        need_checkpoint_initiation[layer] = true;
-        if (generator->id == 0) {
-          std::cout << layer << ", ";
-        }
-      }
-      if (generator->id == 0) {
-        std::cout << std::endl;
-      }
-    }
-  } else if (
-      parallelismPolicy == ParallelismPolicy::DLRM ||
-      parallelismPolicy == ParallelismPolicy::DLRMEnhanced) {
-    inFile >> DLRM_LAST_BOTTOM_LAYER;
-    if (generator->id == 0) {
-      std::cout
-          << "****************** info: DLRM workload last bottom layer is: "
-          << DLRM_LAST_BOTTOM_LAYER << std::endl;
-    }
-  } else if (parallelismPolicy == ParallelismPolicy::None) {
-    #ifndef PHY_MTP
-    std::cerr << "######### Exiting because unable to decode the workload "
+
+        if(parallelismPolicy == ParallelismPolicy::TransformerFwdInBckwd){
+          if (generator->id == 0) {
+            std::cout << "checkpoints layers are: ";
+          }
+          for(size_t i = 1; i < tokens.size(); i = i+1){
+            if(tokens[i]=="checkpoints:"){
+              int account = std::stoi(tokens[i+1]);
+              while(account-- >0){
+                int j = 2;
+                int layer = std::stoi(tokens[i+j]);
+                chekpoints[layer] = true;
+                if (generator->id == 0) {
+                  std::cout << layer << ", ";
+                }
+                j++;
+              }
+                
+            }else if(tokens[i]=="checkpoint_initiates:"){
+                if (generator->id == 0) {
+                  std::cout << std::endl;
+                  std::cout << "layers initiating fwd_in_bckwd are: ";
+                }
+                int account = std::stoi(tokens[i+1]);
+                while(account-- >0){
+                  int j = 2;
+                  int layer = std::stoi(tokens[i+j]);
+                  chekpoints[layer] = true;
+                  if (generator->id == 0) {
+                    std::cout << layer << ", ";
+                  }
+                  j++;
+                }
+                if (generator->id == 0) {
+                  std::cout << std::endl;
+                }
+              }
+            }
+          }
+      }else if(parallelismPolicy == ParallelismPolicy::DLRM ||
+                parallelismPolicy == ParallelismPolicy::DLRMEnhanced){
+                  for (size_t i = 1; i < tokens.size(); i = i+1){
+                    if(tokens[i]=="DLRM_LAST_BOTTOM_LAYER:"){
+                      DLRM_LAST_BOTTOM_LAYER = std::stoi(tokens[i+1]);
+                    }
+                  }
+                if (generator->id == 0) {
+                  std::cout
+                  << "****************** info: DLRM workload last bottom layer is: "
+                  << DLRM_LAST_BOTTOM_LAYER << std::endl;
+                }
+        }else if (parallelismPolicy == ParallelismPolicy::None) {
+          #ifndef PHY_MTP
+          std::cerr << "######### Exiting because unable to decode the workload "
                  "parallelization strategy #########"
-              << std::endl;
-    inFile.close();
-    exit(1);
-    #else
-    parallelismPolicy = ParallelismPolicy::TransformerFwdInBckwd;
-    #endif
+                  << std::endl;
+          inFile.close();
+          exit(1);
+          #else
+          parallelismPolicy = ParallelismPolicy::TransformerFwdInBckwd;
+          #endif
   }
   std::map<std::string, std::vector<bool>> general_involved_dimensions =
       decode_involved_dimensions(parallelismPolicy, model_parallel_npu_group);
-  inFile >> lines;
-  run_type = type;
+  pp_commsize = 0;
+  for (size_t i = 1; i < tokens.size(); i = i+1){
+    if(tokens[i]=="pp_comm"||tokens[i]=="pp_comm:"){
+      pp_commsize = std::stoi(tokens[i+1]);
+    }
+  }
+  if (generator->id == 0) {
+      std::cout <<"pp_commize:"<< pp_commsize << std::endl;
+  }
+  if(generator->id == 0){
+    if (model_parallel_npu_group == 0 || expert_parallel_npu_group == 0 || pipeline_model_parallelism == 0 
+        || vpp==0 || GA == 0 || all_gpus == 0 ||(pipeline_model_parallelism !=1 && pp_commsize ==0)||(pipeline_model_parallelism == 1 && pp_commsize !=0)){
+          std::cerr << "*****Warining: Input workload format mismatch. It may cause simulation error. Pleased use the latest AICB to generate.*****" << std::endl;
+      }
+  }        
+  run_type = tokens[0];
+  std::string secondline;
+  std::getline(inFile,secondline);
+
+  int lines;
+  // std::cout << "Second line content: '" << secondline << "'" << std::endl;
+  lines = std::stoi(secondline);
+
+
   SIZE = lines;
   layers = new Layer*[SIZE];
   for (int i = 0; i < lines; i++) {
@@ -1272,7 +1342,7 @@ bool Workload::initialize_workload(std::string name) {
         wg_group_type = MockNccl::GroupType::NONE;
       }
     } else if (wg_comm_type_s.substr(0,9) == "ALLGATHER") {
-      wg_type = ComType::All_Gatehr;
+      wg_type = ComType::All_Gather;
       if(wg_comm_type_s == "ALLGATHER"){
         wg_group_type = MockNccl::GroupType::DP;
       } else if(wg_comm_type_s == "ALLGATHER_EP"){
@@ -1331,7 +1401,7 @@ bool Workload::initialize_workload(std::string name) {
         ig_group_type = MockNccl::GroupType::NONE;
       }
     } else if (ig_comm_type_s.substr(0,9) == "ALLGATHER") {
-      ig_type = ComType::All_Gatehr;
+      ig_type = ComType::All_Gather;
       if(ig_comm_type_s == "ALLGATHER"){
         ig_group_type = MockNccl::GroupType::TP;
       } else if(ig_comm_type_s == "ALLGATHER_EP"){
@@ -1388,7 +1458,7 @@ bool Workload::initialize_workload(std::string name) {
         fp_group_type = MockNccl::GroupType::NONE;
       }
     } else if (fp_comm_type_s.substr(0,9) == "ALLGATHER") {
-      fp_type = ComType::All_Gatehr;
+      fp_type = ComType::All_Gather;
       if(fp_comm_type_s == "ALLGATHER"){
         fp_group_type = MockNccl::GroupType::TP;
       } else if(fp_comm_type_s == "ALLGATHER_EP"){
@@ -1418,7 +1488,7 @@ bool Workload::initialize_workload(std::string name) {
     } else if (wg_comm_type_s == "ALLREDUCEALLTOALL") {
       wg_type = ComType::All_Reduce_All_to_All;
     } else if (wg_comm_type_s == "ALLGATHER") {
-      wg_type = ComType::All_Gatehr;
+      wg_type = ComType::All_Gather;
     } else if (wg_comm_type_s == "REDUCESCATTER") {
       wg_type = ComType::Reduce_Scatter;
     }
@@ -1430,7 +1500,7 @@ bool Workload::initialize_workload(std::string name) {
     } else if (ig_comm_type_s == "ALLREDUCEALLTOALL") {
       ig_type = ComType::All_Reduce_All_to_All;
     } else if (ig_comm_type_s == "ALLGATHER") {
-      ig_type = ComType::All_Gatehr;
+      ig_type = ComType::All_Gather;
     } else if (ig_comm_type_s == "REDUCESCATTER") {
       ig_type = ComType::Reduce_Scatter;
     }
@@ -1442,7 +1512,7 @@ bool Workload::initialize_workload(std::string name) {
     } else if (fp_comm_type_s == "ALLREDUCEALLTOALL") {
       fp_type = ComType::All_Reduce_All_to_All;
     } else if (fp_comm_type_s == "ALLGATHER") {
-      fp_type = ComType::All_Gatehr;
+      fp_type = ComType::All_Gather;
     } else if (fp_comm_type_s == "REDUCESCATTER") {
       fp_type = ComType::Reduce_Scatter;
     }
@@ -1500,7 +1570,7 @@ bool Workload::initialize_workload(std::string name) {
     layers[i] = l;
   }
   if (generator->id == 0) {
-    std::cout << "type: " << type << " ,num passes: " << TOTAL_PASS
+    std::cout << "type: " << run_type << " ,num passes: " << TOTAL_PASS
               << " ,lines: " << lines
               << " compute scale: " << generator->compute_scale
               << " ,comm scale: " << generator->comm_scale << std::endl;

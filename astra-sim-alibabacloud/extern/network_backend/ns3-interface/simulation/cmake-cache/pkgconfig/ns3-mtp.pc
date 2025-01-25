@@ -8,6 +8,6 @@ URL:
 Version: 3.36.1
 Requires:  ns3-core ns3-network
 Requires.private: 
-Cflags: -I"${includedir}" -I/usr/include -I/usr; -I/usr/include/libxml2 -I/usr/include/python3.10 -I/root/anaconda3/include
+Cflags: -I"${includedir}" -I/usr/include -I/usr; -I/usr/include/libxml2 -I/root/anaconda3/include/python3.12 -I/root/anaconda3/include
 Libs: -L"${libdir}" -lns3.36.1-mtp-debug  -lns3.36.1-core-debug -lns3.36.1-network-debug
 Libs.private: -L"${libdir}" 

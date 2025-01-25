@@ -8,7 +8,7 @@ out_dir = '/mnt/fth/software2/SimAI/astra-sim-alibabacloud/extern/network_backen
 
 NS3_ENABLED_MODULES = ['ns3-wimax', 'ns3-wifi', 'ns3-wave', 'ns3-virtual-net-device', 'ns3-uan', 'ns3-traffic-control', 'ns3-topology-read', 'ns3-tap-bridge', 'ns3-stats', 'ns3-spectrum', 'ns3-sixlowpan', 'ns3-propagation', 'ns3-point-to-point-layout', 'ns3-point-to-point', 'ns3-olsr', 'ns3-nix-vector-routing', 'ns3-network', 'ns3-netanim', 'ns3-mtp', 'ns3-mobility', 'ns3-mesh', 'ns3-lte', 'ns3-lr-wpan', 'ns3-internet-apps', 'ns3-internet', 'ns3-flow-monitor', 'ns3-fd-net-device', 'ns3-energy', 'ns3-dsr', 'ns3-dsdv', 'ns3-csma-layout', 'ns3-csma', 'ns3-core', 'ns3-config-store', 'ns3-buildings', 'ns3-bridge', 'ns3-applications', 'ns3-aodv', 'ns3-antenna', ]
 NS3_ENABLED_CONTRIBUTED_MODULES = []
-NS3_MODULE_PATH = ['/root/anaconda3/envs/fth01/bin', '/root/anaconda3/condabin', '/root/anaconda3/bin', '.', '/usr/local/cuda/bin', '/root/.vscode-server/cli/servers/Stable-384ff7382de624fb94dbaf6da11977bba1ecd427/server/bin/remote-cli', '/root/.pyenv/shims', '/root/.pyenv/bin', '/usr/local/cuda/bin', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/mnt/fth/software2/SimAI/astra-sim-alibabacloud/extern/network_backend/ns3-interface/simulation/build', '/mnt/fth/software2/SimAI/astra-sim-alibabacloud/extern/network_backend/ns3-interface/simulation/build/lib']
+NS3_MODULE_PATH = ['/opt/cmake-3.31.1/bin', '/root/anaconda3/bin', '.', '/usr/local/cuda/bin', '/opt/nvidia/nsight-systems/2024.5.1/bin', '/mnt/mcx/miniconda3/envs/simai/bin', '/opt/cmake-3.27.9-linux-x86_64/bin', '/root/.vscode-server/cli/servers/Stable-138f619c86f1199955d53b4166bef66ef252935c/server/bin/remote-cli', '/opt/nvidia/nsight-systems/2024.5.1/bin', '/mnt/mcx/miniconda3/bin', '/mnt/mcx/miniconda3/condabin', '/mnt/mcx/miniconda3/bin', '/opt/cmake-3.27.9-linux-x86_64/bin', '/root/.pyenv/shims', '/root/.pyenv/bin', '/usr/local/cuda/bin', '/root/.pyenv/bin', '/usr/local/cuda/bin', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/root/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand', '/mnt/fth/software2/SimAI/astra-sim-alibabacloud/extern/network_backend/ns3-interface/simulation/build', '/mnt/fth/software2/SimAI/astra-sim-alibabacloud/extern/network_backend/ns3-interface/simulation/build/lib']
 ENABLE_REAL_TIME = True
 ENABLE_EXAMPLES = False
 ENABLE_TESTS = False
@@ -22,7 +22,7 @@ EXAMPLE_DIRECTORIES = []
 APPNAME = 'ns'
 BUILD_PROFILE = 'debug'
 VERSION = '3.36.1' 
-PYTHON = ['/usr/bin/python3.10']
+PYTHON = ['/root/anaconda3/bin/python3.12']
 VALGRIND_FOUND = False 
 
 
