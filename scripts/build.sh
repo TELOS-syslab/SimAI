@@ -1,3 +1,5 @@
+#!/bin/bash
+
 SCRIPT_DIR=$(dirname "$(realpath $0)")
 ROOT_DIR=$(realpath "${SCRIPT_DIR:?}"/..)
 NS3_DIR="${ROOT_DIR:?}"/ns-3-alibabacloud
@@ -13,6 +15,9 @@ function compile {
     "ns3")
         mkdir -p "${TARGET_BIN_DIR:?}"
         rm -rf "${SIMAI_DIR:?}"/extern/network_backend/ns3-interface/
+        if [ -L "${TARGET_BIN_DIR:?}/SimAI_simulator" ]; then
+            rm -rf "${TARGET_BIN_DIR:?}"/SimAI_simulator
+        fi
         mkdir -p "${SIMAI_DIR:?}"/extern/network_backend/ns3-interface
         cp -r "${NS3_DIR:?}"/* "${SIMAI_DIR:?}"/extern/network_backend/ns3-interface
         cd "${SIMAI_DIR:?}"
@@ -21,6 +26,9 @@ function compile {
         ln -s "${SOURCE_NS3_BIN_DIR:?}" "${TARGET_BIN_DIR:?}"/SimAI_simulator;;
     "phy")
         mkdir -p "${TARGET_BIN_DIR:?}"
+        if [ -L "${TARGET_BIN_DIR:?}/SimAI_phynet" ]; then
+            rm -rf "${TARGET_BIN_DIR:?}"/SimAI_phynet
+        fi
         cd "${SIMAI_DIR:?}"
         ./build.sh -lr phy
         ./build.sh -c phy 
@@ -28,6 +36,9 @@ function compile {
     "analytical")
         mkdir -p "${TARGET_BIN_DIR:?}"
         mkdir -p "${ROOT_DIR:?}"/results
+        if [ -L "${TARGET_BIN_DIR:?}/SimAI_analytical" ]; then
+            rm -rf "${TARGET_BIN_DIR:?}"/SimAI_analytical
+        fi
         cd "${SIMAI_DIR:?}"
         ./build.sh -lr analytical
         ./build.sh -c analytical 
@@ -39,16 +50,22 @@ function cleanup_build {
     local option="$1"
     case "$option" in
     "ns3")
-        rm  "${TARGET_BIN_DIR:?}"/SimAI_simulator
+        if [ -L "${TARGET_BIN_DIR:?}/SimAI_simulator" ]; then
+            rm -rf "${TARGET_BIN_DIR:?}"/SimAI_simulator
+        fi
         rm -rf "${SIMAI_DIR:?}"/extern/network_backend/ns3-interface/
         cd "${SIMAI_DIR:?}"
         ./build.sh -lr ns3;;
     "phy")
-        rm  "${TARGET_BIN_DIR:?}"/SimAI_phynet
+        if [ -L "${TARGET_BIN_DIR:?}/SimAI_phynet" ]; then
+            rm -rf "${TARGET_BIN_DIR:?}"/SimAI_phynet
+        fi
         cd "${SIMAI_DIR:?}"
         ./build.sh -lr phy;;
     "analytical")
-        rm  "${TARGET_BIN_DIR:?}"/SimAI_analytical
+        if [ -L "${TARGET_BIN_DIR:?}/SimAI_analytical" ]; then
+            rm -rf "${TARGET_BIN_DIR:?}"/SimAI_analytical
+        fi
         cd "${SIMAI_DIR:?}"
         ./build.sh -lr analytical;;
     esac
